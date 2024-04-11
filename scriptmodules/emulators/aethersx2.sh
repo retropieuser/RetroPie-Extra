@@ -46,9 +46,19 @@ function configure_aethersx2() {
     moveConfigDir "$home/.config/aethersx2" "$md_conf_root/ps2/Config"
     mkUserDir "$md_conf_root/ps2/Config"
     
+    # Create the ps2 BIOs directory if it doesn't exist
+    if [ ! -d "$home/RetroPie/BIOS/ps2" ]; then
+        mkdir -p "$home/RetroPie/BIOS/ps2"
+    fi
+
+    # Create a symbolic link for BIOS
+    if [ ! -L "$home/.config/aethersx2/bios" ]; then
+        ln -s "$home/RetroPie/BIOS/ps2" "$home/.config/aethersx2/bios"
+    fi
+    
     # preset a few options on a first installation
-    if [[ ! -f "$md_conf_root/ps2/Config/inis/PCSX2.ini" ]]; then
-        cat >"$md_conf_root/ps2/Config/inis/PCSX2.ini" <<_EOF_
+    if [[ ! -f "$home/.config/aethersx2/inis/PCSX2.ini" ]]; then
+        cat >"$home/.config/aethersx2/inis/PCSX2.ini" <<_EOF_
 [UI]
 SettingsVersion = 1
 InhibitScreensaver = true
@@ -102,7 +112,6 @@ SavestateZstdCompression = true
 McdEnableEjection = true
 McdFolderAutoManage = true
 WarnAboutUnsafeSettings = true
-GzipIsoIndexTemplate = $(f).pindex.tmp
 BlockDumpSaveDirectory =
 EnableFastBoot = true
 
